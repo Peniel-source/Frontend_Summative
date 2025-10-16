@@ -107,3 +107,4 @@
         getCurrencyDisplay
     };
 })(window.App);
+
