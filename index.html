@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Finance Tracker</title>
+    <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="body">
+
+<a href="#mainContent" class="skip-link">Skip to Main Content</a>
+
+<header class="header">
+    <div class="header-container">
+        <h1 class="header-title">Student Finance Tracker</h1>
+        <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+            <span class="toggle-icon">🌙</span>
+        </button>
+    </div>
+</header>
+
+<nav role="navigation" aria-label="Main navigation" class="nav">
+    <ul class="nav-list">
+        <li><button data-target="about" class="nav-button">About</button></li>
+        <li><button data-target="dashboard" class="nav-button">Dashboard</button></li>
+        <li><button data-target="records" class="nav-button">Records</button></li>
+        <li><button data-target="forms" class="nav-button">Add Record</button></li>
+        <li><button data-target="scraper" class="nav-button" >Scraper</button></li>
+        <li><button data-target="settings" class="nav-button">Settings</button></li>
+    </ul>
+</nav>
+
+<main id="mainContent" role="main" class="main">
+
+    <section id="about" class="section">
+        <h2 class="section-title">Welcome To The Finance Tracker</h2>
+        <p class="section-text">
+            This application is a student finance tracker, designed to help manage budgets, track daily expenses, and stay accountable to spending limits.
+        </p>
+        <p class="section-text">
+            Created by <a href="https://github.com/Peniel-source" target="_blank" class="link">Peniel-source</a> (GitHub) |
+            <a href="mailto:p.obeng@alustudent.com" class="link">p.obeng@alustudent.com</a>
+        </p>
+    </section>
+
+    <section id="dashboard" class="section">
+        <h2 class="section-title">Financial Summary</h2>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">Total Expenses</p>
+                <div class="stat-value"><span id="totalAmount">0.00 USD</span></div>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Total Records</p>
+                <div class="stat-value"><span id="totalRecords">0</span> Transactions</div>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Top Category</p>
+                <div class="stat-value"><span id="topCategory">-</span></div>
+            </div>
+        </div>
+
+        <div role="status" aria-live="polite" id="capMessage" class="budget-status">
+            Current Budget Status: Loading...
+        </div>
+
+        <h3 class="chart-title">Last 7 Days Expenses </h3>
+        <div class="chart-wrapper">
+            <div id="trendChart" class="chart"></div>
+        </div>
+        <div class="chart-labels">
+            <span>7 Days Ago</span><span>Today</span>
+        </div>
+    </section>
+
+    <section id="records" class="section">
+        <h2 class="section-title">Expense Records</h2>
+
+        <div class="controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search records using regex pattern..." class="input" />
+                <label class="checkbox-label">
+                    <input type="checkbox" id="caseToggle" class="checkbox" /> Case-insensitive
+                </label>
+            </div>
+            <div id="regexStatus" role="status" aria-live="polite" class="status-text"></div>
+
+            <div class="sort-buttons">
+                <button id="sortDate" data-dir="asc" class="sort-button">Date <span class="sort-icon">↑</span></button>
+                <button id="sortDescription" data-dir="asc" class="sort-button">Alphabetical Oder <span class="sort-icon">↑</span></button>
+                <button id="sortAmount" data-dir="asc" class="sort-button">Amount <span class="sort-icon">↑</span></button>
+            </div>
+        </div>
+
+        <div id="recordsContainer" class="records-container"></div>
+
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h3 class="modal-title">Confirm Deletion</h3>
+                <p class="modal-text">Do you really want to delete this record?</p>
+                <div class="modal-actions">
+                    <button id="cancelDeleteBtn" class="modal-button cancel">Cancel</button>
+                    <button id="confirmDeleteBtn" data-record-id="" class="modal-button delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="forms" class="section">
+        <h2 class="section-title">Add/Edit Record</h2>
+        <form id="recordForm" class="form">
+            <input type="hidden" id="recordId" value="" />
+
+            <div class="form-group">
+                <label for="desc" class="form-label">Description:</label>
+                <input type="text" id="desc" required class="input" />
+                <span id="descriptionError" class="error-text"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="amount" class="form-label">Amount:</label>
+                <input type="number" step="0.01" id="amount" required class="input" />
+                <span id="amountError" class="error-text"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="category" class="form-label">Category:</label>
+                <select id="category" required class="select">
+                    <option value="">-- Select Category --</option>
+                    <option value="Food">Food</option>
+                    <option value="Books">Books/Education</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Fees">Fees</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span id="categoryError" class="error-text"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="date" class="form-label">Date:</label>
+                <input type="date" id="date" required class="input" />
+                <span id="dateError" class="error-text"></span>
+            </div>
+
+            <button type="submit" class="submit-button">Save Record</button>
+        </form>
+    </section>
+
+    <section id="scraper" class="hidden-section">
+        <h2 class="section-title">Mini jQuery Scraper</h2>
+        <textarea id="htmlInput" rows="10" class="input w-full mb-4" placeholder="Paste HTML snippet here..."></textarea>
+        <button id="scrapeBtn" class="btn">Scrape</button>
+        <pre id="output" class="output-box mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+    </section>
+
+    <section id="settings" class="section">
+        <h2 class="section-title">Settings & Data Management</h2>
+
+        <div class="settings-wrapper">
+            <div class="settings-group">
+                <h3 class="settings-title">Display Currency</h3>
+                <label for="currencySelect" class="form-label">Select Base Currency:</label>
+                <select id="currencySelect" class="select">
+                    <option value="USD">USD ($)</option>
+                    <option value="RWF">RWF (Fr)</option>
+                </select>
+                <p class="section-text">Conversion rates are default</p>
+            </div>
+
+            <div class="settings-group">
+                <h3 class="settings-title">Budget Amount(in USD)</h3>
+                <label for="budget" class="form-label">Set Monthly Budget Amount(USD):</label>
+                <input type="number" id="budget" value="200" class="input" />
+            </div>
+
+            <div class="settings-group">
+                <h3 class="settings-title">Data Import & Export</h3>
+                <div class="import-group">
+                    <label for="importFile" class="form-label">1. Import JSON File</label>
+                    <input type="file" id="importFile" accept=".json" class="input" />
+                    <button id="importBtn" class="action-button">Import & Validate JSON</button>
+                    <div id="importStatus" role="status" aria-live="polite" class="status-text"></div>
+                </div>
+
+                <div class="export-group">
+                    <button id="exportBtn" class="action-button">Export All Data to JSON</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2025 Peniel | Frontend Web Dev Summative</p>
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="scripts/storage.js"></script>
+<script src="scripts/validators.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/state.js"></script>
+<script src="scripts/ui.js"></script>
+</body>
+</html>

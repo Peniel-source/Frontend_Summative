@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Regex Validation Tester</title>
+    <script type="module">
+        import { validateField, getErrorMessage } from '../scripts/validators.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('testForm');
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+
+                const fields = ['description', 'amount', 'date', 'category'];
+                fields.forEach(field => {
+                    const input = document.getElementById(`test-${field}`);
+                    const result = document.getElementById(`${field}-result`);
+                    const value = input.value;
+
+                    if (validateField(field, value)) {
+                        result.textContent = '✅ Valid';
+                        result.style.color = 'green';
+                    } else {
+                        result.textContent = `❌ ${getErrorMessage(field)}`;
+                        result.style.color = 'red';
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Regex Validation Tester</h1>
+<form id="testForm">
+    <label>Description: <input type="text" id="test-description"></label>
+    <span id="description-result"></span><br>
+
+    <label>Amount: <input type="text" id="test-amount"></label>
+    <span id="amount-result"></span><br>
+
+    <label>Date (YYYY-MM-DD): <input type="text" id="test-date"></label>
+    <span id="date-result"></span><br>
+
+    <label>Category: <input type="text" id="test-category"></label>
+    <span id="category-result"></span><br>
+
+    <button type="submit">Run Tests</button>
+</form>
+</body>
+</html>
