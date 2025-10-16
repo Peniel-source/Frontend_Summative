@@ -26,7 +26,7 @@ A responsive, accessible, and modular web application for tracking personal fina
 
 ## 🌐 Live Demo
 
-**GitHub Pages URL**: [https://Peniel-source.github.io/student-finance-tracker](https://Peniel-source.github.io/student-finance-tracker)  
+**GitHub Pages URL**: (https://peniel-source.github.io/Frontend_Summative/) 
 
 ---
 
