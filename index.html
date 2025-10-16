@@ -13,7 +13,7 @@
 <header class="header">
     <div class="header-container">
         <h1 class="header-title">Student Finance Tracker</h1>
-        <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+        <button id="darkModeToggle" class="nav-button" aria-label="Toggle dark mode">
             <span class="toggle-icon">🌙</span>
         </button>
     </div>
@@ -148,11 +148,15 @@
         </form>
     </section>
 
-    <section id="scraper" class="hidden-section">
-        <h2 class="section-title">Mini jQuery Scraper</h2>
-        <textarea id="htmlInput" rows="10" class="input w-full mb-4" placeholder="Paste HTML snippet here..."></textarea>
-        <button id="scrapeBtn" class="btn">Scrape</button>
-        <pre id="output" class="output-box mt-4 bg-gray-100 p-4 rounded text-sm overflow-auto"></pre>
+    <section id="scraper" class="hidden-section scraper-section">
+        <h2 class="section-title">jQuery Scraper</h2>
+        <label for="htmlInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"></label>
+        <textarea id="htmlInput" rows="10" class="scraper-textarea" placeholder='Paste static HTML snippet'></textarea>
+        <button id="scrapeBtn" class="scraper-btn mt-3">Scrape</button>
+        <label for="output" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-6 mb-1">
+            JSON Output:
+        </label>
+        <pre id="output" class="scraper-output"></pre>
     </section>
 
     <section id="settings" class="section">
