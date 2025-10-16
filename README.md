@@ -24,110 +24,98 @@ A responsive, accessible, and modular web application for tracking personal fina
 
 ---
 
+## 🌐 Live Demo
+
+**GitHub Pages URL**: [https://Peniel-source.github.io/student-finance-tracker](https://Peniel-source.github.io/student-finance-tracker)  
+
+---
+
+## 🎨 Chosen Theme
+
+**Minimalist Budgeting** — clean layout, clear typography, and intuitive navigation designed for students managing personal expenses.
+
+---
+
 ## 🚀 Features
 
-- **Dashboard Overview**  
-  View total records, total spending, top category, and budget cap status with visual alerts.
-
-- **Record Management**  
-  Add, edit, delete financial records with validation and accessibility support.
-
-- **Sorting & Filtering**  
-  Sort by description, amount, or date. Filter records using live regex search with case sensitivity toggle.
-
-- **Currency Switching**  
-  Display amounts in different currencies (e.g. USD, RWF) with dynamic formatting.
-
-- **Budget Cap Alerts**  
-  Set a spending cap and receive visual warnings when nearing or exceeding it.
-
-- **Chart Visualization**  
-  View a 7-day spending trend with animated bar charts.
-
-- **Import/Export JSON**  
-  Upload valid JSON arrays of records or export your data for backup.
-
-- **Dark Mode Toggle**  
-  Switch between light and dark themes using a persistent toggle button.
-
-- **Mini jQuery Scraper**  
-  Paste static HTML snippets and extract structured data like headings, links, images, tables, and form fields using jQuery selectors.
+- Dashboard overview with total records, spending, top category, and budget cap alerts
+- Add/edit/delete records with validation
+- Sort by description, amount, or date
+- Regex-based live search with case toggle
+- Currency switching (USD, RWF)
+- Budget cap alerts with visual feedback
+- 7-day spending chart
+- JSON import/export
+- Dark mode toggle
+- jQuery-powered HTML scraper
 
 ---
 
-## 🧪 Scraper Usage
+## 🔍 Regex Catalog
 
-1. Navigate to the **Scraper** section via the nav button.
-2. Paste any static HTML snippet (e.g. product cards, article blocks).
-3. Click **Scrape** to extract:
-   - Headings (`<h1>`–`<h6>`)
-   - Links (`<a href>`)
-   - Images (`<img src>`)
-   - Tables (`<table>`)
-   - Form fields (`<input>`, `<select>`, `<textarea>`)
-4. View the structured JSON output in a styled container.
-
-> Sample HTML snippets are available in `assets/test.html`.
+| Pattern | Description | Example |
+|--------|-------------|---------|
+| `^Food$` | Exact match | Matches only "Food" |
+| `Lunch|Dinner` | OR match | Matches "Lunch" or "Dinner" |
+| `(?<=\$)\d+` | Lookbehind | Matches numbers after `$` |
+| `\d{4}-\d{2}-\d{2}` | Date format | Matches `2025-10-17` |
+| `\w+@\w+\.\w+` | Email format | Matches `user@example.com` |
 
 ---
 
-## 📦 Import Format
+## ♿ Accessibility Notes
 
-```json
-[
-  {
-    "description": "Lunch",
-    "amount": 5.99,
-    "category": "Food",
-    "date": "2025-10-16"
-  }
-]
-```
-
-> Must be a valid JSON array. Each object must include `description`, `amount`, `category`, and `date`.
-
----
-
-## 🛠 Technologies Used
-
-- Vanilla JavaScript (modular)
-- jQuery (for scraping only)
-- Semantic HTML5
-- Responsive CSS with dark mode support
-- LocalStorage for persistence
-
----
-
-## ♿ Accessibility Highlights
-
-- ARIA labels on buttons
-- Keyboard-navigable sections
-- Color contrast and theme toggling
+- Semantic HTML5 with landmarks (`<main>`, `<nav>`, `<header>`, `<section>`)
+- Proper heading hierarchy (`<h1>` to `<h3>`)
+- ARIA labels on buttons and inputs
 - Live region alerts for budget cap status
+- High contrast colors and dark mode support
+- Keyboard-navigable forms and sections
 
 ---
 
-## 🌙 Dark Mode
+## 🧪 How to Run Tests
 
-Toggle via the moon/sun icon in the header. Theme preference is saved in `localStorage` and applied on load using:
+Manual testing steps:
 
-```js
-document.body.setAttribute('data-theme', 'dark');
-```
+1. **Regex Search**  
+   - Try searching `Lunch|Dinner` or `(?<=\$)\d+` in the search bar  
+   - Toggle case sensitivity and observe results
 
-CSS uses `[data-theme="dark"]` selectors for styling.
+2. **Import JSON**  
+   - Use `assets/seed.json` with 10+ diverse records  
+   - Click “Import” and verify records load correctly
+
+3. **Export JSON**  
+   - Click “Export” and confirm downloaded file matches current records
+
+4. **Scraper Test**  
+   - Paste `assets/test.html` into the scraper textarea  
+   - Click “Scrape” and verify structured output
+
+5. **Dark Mode**  
+   - Click 🌙 icon and confirm theme switches and persists
+
+6. **Responsive Layout**  
+   - Resize browser to mobile, tablet, and desktop widths  
+   - Confirm layout adapts without overlap or breakage
 
 ---
 
-## 📌 Future Enhancements
+## 📦 seed.json Requirements
 
-- Clipboard export for scraped data
-- CSV import/export
-- Category color tagging
-- System theme detection (`prefers-color-scheme`)
-- Scraper selector presets
+Located in `assets/seed.json` — includes:
+
+- ≥10 records
+- Edge dates: `2020-01-01`, `2030-12-31`
+- Large/small amounts: `0.01`, `99999.99`
+- Tricky strings: `"Lunch @ Café"`, `"Rent (Jan)"`, `"Gift: 🎁"`
 
 ---
+## 📹 Demo Video
+
+Unlisted YouTube link: _To be added_
+
 
 ## 📚 References & Code Inspirations
 
