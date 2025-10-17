@@ -15,7 +15,7 @@
         try {
             return text.replace(regex, match => `<mark>${match}</mark>`);
         } catch {
-            return text;
+            return text; 
         }
     };
 
@@ -35,18 +35,36 @@
 // Mini jQuery Scraper 
 document.addEventListener('DOMContentLoaded', () => {
     const scrapeBtn = document.getElementById('scrapeBtn');
-    if (!scrapeBtn) return;
+    const htmlInput = document.getElementById('htmlInput');
+    const outputElement = document.getElementById('output');
+
+    if (!scrapeBtn || !htmlInput || !outputElement) return;
+
+    // Clear output when input is cleared
+    htmlInput.addEventListener('input', () => {
+        if (htmlInput.value.trim() === '') {
+            outputElement.textContent = '';
+        }
+    });
 
     scrapeBtn.addEventListener('click', () => {
-        const htmlInput = document.getElementById('htmlInput').value;
+        const inputValue = htmlInput.value.trim();
 
-        // Check if jQuery is loaded
-        if (typeof $ === 'undefined') {
-            document.getElementById('output').textContent = 'Error: jQuery not loaded';
+        
+        if (!inputValue) {
+            outputElement.textContent = 'Please paste HTML content to scrape.';
+            outputElement.style.color = '#dc2626';
             return;
         }
 
-        const $dom = $('<div>').html(htmlInput);
+        
+        if (typeof $ === 'undefined') {
+            outputElement.textContent = 'Error: jQuery not loaded';
+            outputElement.style.color = '#dc2626';
+            return;
+        }
+
+        const $dom = $('<div>').html(inputValue);
 
         const output = {
             headings: [],
@@ -56,13 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formFields: []
         };
 
-        // headings
+        // scraping for headings
         $dom.find('h1, h2, h3, h4, h5, h6').each(function() {
             const text = $(this).text().trim();
             if (text) output.headings.push(text);
         });
 
-        // links
+        // craping for links
         $dom.find('a[href]').each(function() {
             output.links.push({
                 text: $(this).text().trim(),
@@ -70,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // images
+        // scraping for images
         $dom.find('img[src]').each(function() {
             output.images.push({
                 src: $(this).attr('src'),
@@ -78,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // tables
+        // scraping for tables
         $dom.find('table').each(function() {
             const rows = [];
             $(this).find('tr').each(function() {
@@ -92,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rows.length) output.tables.push(rows);
         });
 
-        //form fields
+        // sxcraping for form fields
         $dom.find('input, select, textarea').each(function() {
             const tag = this.tagName.toLowerCase();
             const name = $(this).attr('name') || '';
@@ -101,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             output.formFields.push({ tag, name, type, value });
         });
 
-        document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+        outputElement.textContent = JSON.stringify(output, null, 2);
+        outputElement.style.color = ''; // Reset color
     });
 });
