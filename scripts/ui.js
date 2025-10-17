@@ -384,7 +384,7 @@
         });
     }
 
-    // Dark Mode Toggle
+    // Dark Mode 
     function setupDarkMode() {
         const toggleBtn = document.getElementById('darkModeToggle');
         if (!toggleBtn) return;

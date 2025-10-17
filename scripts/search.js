@@ -6,7 +6,7 @@
             const effectiveFlags = input ? flags : '';
             return input ? new RegExp(input, effectiveFlags) : null;
         } catch {
-            return null; // Invalid pattern
+            return null; 
         }
     };
 
@@ -15,7 +15,7 @@
         try {
             return text.replace(regex, match => `<mark>${match}</mark>`);
         } catch {
-            return text; // Fallback if regex execution fails
+            return text;
         }
     };
 
@@ -23,7 +23,7 @@
         if (!regex) return records;
 
         return records.filter(record => {
-            // Search in description and category fields
+            
             return regex.test(record.description) || regex.test(record.category);
         });
     };
@@ -32,7 +32,7 @@
 })(window.App);
 
 
-// Mini jQuery Scraper (separate from main App)
+// Mini jQuery Scraper 
 document.addEventListener('DOMContentLoaded', () => {
     const scrapeBtn = document.getElementById('scrapeBtn');
     if (!scrapeBtn) return;
@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formFields: []
         };
 
-        // Scraping for headings
+        // headings
         $dom.find('h1, h2, h3, h4, h5, h6').each(function() {
             const text = $(this).text().trim();
             if (text) output.headings.push(text);
         });
 
-        // Scraping for links
+        // links
         $dom.find('a[href]').each(function() {
             output.links.push({
                 text: $(this).text().trim(),
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Scraping for images
+        // images
         $dom.find('img[src]').each(function() {
             output.images.push({
                 src: $(this).attr('src'),
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Scraping for tables
+        // tables
         $dom.find('table').each(function() {
             const rows = [];
             $(this).find('tr').each(function() {
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rows.length) output.tables.push(rows);
         });
 
-        // Scraping for form fields
+        //form fields
         $dom.find('input, select, textarea').each(function() {
             const tag = this.tagName.toLowerCase();
             const name = $(this).attr('name') || '';

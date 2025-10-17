@@ -1,4 +1,4 @@
-// This file manages the central data array
+// 
 (function(App) {
     let records = App.Storage.load();
 
@@ -12,7 +12,7 @@
         RWF: 'Fr'
     };
 
-    // Display currency and budget cap settings from the local storage
+    // Display currency and budget settings from the local storage
     let settings = {
         displayCurrency: localStorage.getItem('app:currency') || 'USD',
         budget: parseFloat(localStorage.getItem('app:cap')) || 200
@@ -52,7 +52,7 @@
         };
         records.unshift(newRecord);
         App.Storage.save(records);
-        // Call UI render after it's available
+        
         if (App.UI && App.UI.renderDashboard) {
             App.UI.renderDashboard();
         }
@@ -70,7 +70,7 @@
 
         record.updatedAt = new Date().toISOString();
         App.Storage.save(records);
-        // Call UI render after it's available
+        
         if (App.UI && App.UI.renderDashboard) {
             App.UI.renderDashboard();
         }
@@ -82,13 +82,13 @@
             records.splice(index, 1);
         }
         App.Storage.save(records);
-        // Call UI render after it's available
+        
         if (App.UI && App.UI.renderDashboard) {
             App.UI.renderDashboard();
         }
     }
 
-    // Tracks the current sort state for bidirectional toggle
+    
     let sortState = {
         key: 'date',
         dir: 'desc'

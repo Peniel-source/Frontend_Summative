@@ -9,6 +9,7 @@
         advanced: /\b(\w+)\s+\1\b/
     };
 
+    
     function validateField(fieldName, value) {
         const regex = rules[fieldName];
         if (!regex) return false;
