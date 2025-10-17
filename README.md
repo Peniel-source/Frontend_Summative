@@ -114,7 +114,7 @@ Located in `assets/seed.json` — includes:
 ---
 ## 📹 Demo Video
 
-Unlisted YouTube link: _To be added_
+[Unlisted YouTube link: (https://youtu.be/t-zexr9WBFY)
 
 
 ## 📚 References & Code Inspirations
