@@ -1,19 +1,18 @@
-// this file manages the central data array
+// This file manages the central data array
 (function(App) {
     let records = App.Storage.load();
 
-    // Currency settings and rates ad their corresponding symbols
+    // Currency settings and rates and their corresponding symbols
     const CURRENCY_RATES = {
         USD: 1.0,
         RWF: 1300.0
-
     };
     const CURRENCY_SYMBOLS = {
         USD: '$',
         RWF: 'Fr'
     };
 
-    // display currency and budget cap settings from the local storage
+    // Display currency and budget cap settings from the local storage
     let settings = {
         displayCurrency: localStorage.getItem('app:currency') || 'USD',
         budget: parseFloat(localStorage.getItem('app:cap')) || 200
@@ -89,7 +88,7 @@
         }
     }
 
-
+    // Tracks the current sort state for bidirectional toggle
     let sortState = {
         key: 'date',
         dir: 'desc'
@@ -107,4 +106,3 @@
         getCurrencyDisplay
     };
 })(window.App);
-

@@ -1,4 +1,4 @@
-// THis file controls the regex search section
+// This file controls the regex search section
 
 (function(App) {
     const compileRegex = (input, flags = '') => {
@@ -6,7 +6,7 @@
             const effectiveFlags = input ? flags : '';
             return input ? new RegExp(input, effectiveFlags) : null;
         } catch {
-            return null; 
+            return null; // Invalid pattern
         }
     };
 
@@ -15,7 +15,7 @@
         try {
             return text.replace(regex, match => `<mark>${match}</mark>`);
         } catch {
-            return text; 
+            return text; // Fallback if regex execution fails
         }
     };
 
@@ -23,6 +23,7 @@
         if (!regex) return records;
 
         return records.filter(record => {
+            // Search in description and category fields
             return regex.test(record.description) || regex.test(record.category);
         });
     };
@@ -31,15 +32,21 @@
 })(window.App);
 
 
-
-//Mini jQuery scrapper
+// Mini jQuery Scraper (separate from main App)
 document.addEventListener('DOMContentLoaded', () => {
     const scrapeBtn = document.getElementById('scrapeBtn');
     if (!scrapeBtn) return;
 
     scrapeBtn.addEventListener('click', () => {
-        const Html = document.getElementById('htmlInput').value;
-        const $dom = $('<div>').html(Html);
+        const htmlInput = document.getElementById('htmlInput').value;
+
+        // Check if jQuery is loaded
+        if (typeof $ === 'undefined') {
+            document.getElementById('output').textContent = 'Error: jQuery not loaded';
+            return;
+        }
+
+        const $dom = $('<div>').html(htmlInput);
 
         const output = {
             headings: [],
@@ -49,34 +56,34 @@ document.addEventListener('DOMContentLoaded', () => {
             formFields: []
         };
 
-        // scrapping fopr headings
-        $dom.find('h1,h2,h3,h4,h5,h6').each(function () {
+        // Scraping for headings
+        $dom.find('h1, h2, h3, h4, h5, h6').each(function() {
             const text = $(this).text().trim();
             if (text) output.headings.push(text);
         });
 
-        // scrapping for links
-        $dom.find('a[href]').each(function () {
+        // Scraping for links
+        $dom.find('a[href]').each(function() {
             output.links.push({
                 text: $(this).text().trim(),
                 href: $(this).attr('href')
             });
         });
 
-        // scrapping for images
-        $dom.find('img[src]').each(function () {
+        // Scraping for images
+        $dom.find('img[src]').each(function() {
             output.images.push({
                 src: $(this).attr('src'),
                 alt: $(this).attr('alt') || ''
             });
         });
 
-        // for tables
-        $dom.find('table').each(function () {
+        // Scraping for tables
+        $dom.find('table').each(function() {
             const rows = [];
-            $(this).find('tr').each(function () {
+            $(this).find('tr').each(function() {
                 const cells = [];
-                $(this).find('th,td').each(function () {
+                $(this).find('th, td').each(function() {
                     const text = $(this).text().trim();
                     cells.push(text);
                 });
@@ -85,17 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (rows.length) output.tables.push(rows);
         });
 
-        // for forms
-        $dom.find('input,select,textarea').each(function () {
+        // Scraping for form fields
+        $dom.find('input, select, textarea').each(function() {
             const tag = this.tagName.toLowerCase();
             const name = $(this).attr('name') || '';
+            const type = $(this).attr('type') || '';
             const value = $(this).val() || '';
-            output.formFields.push({ tag, name, value });
+            output.formFields.push({ tag, name, type, value });
         });
 
         document.getElementById('output').textContent = JSON.stringify(output, null, 2);
     });
 });
-
-
-

@@ -1,11 +1,12 @@
-// THis file does most of error handling and validating regex
+// This file does most of error handling and validating regex
 (function(App) {
     // Define regexes
     const rules = {
         description: /^\S(?:.*\S)?$|^[^ ]$/,
         amount: /^(0|[1-9]\d*)(\.\d{1,2})?$/,
         date: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-        category: /^[A-Za-z]+(?:[ -][A-Za-z]+)*$/
+        category: /^[A-Za-z]+(?:[ -][A-Za-z]+)*$/,
+        advanced: /\b(\w+)\s+\1\b/
     };
 
     function validateField(fieldName, value) {
@@ -26,7 +27,6 @@
         };
         return messages[fieldName] || 'Invalid input.';
     }
-
 
     function validateRecordStructure(record) {
         const requiredFields = ['id', 'description', 'amount', 'category', 'date', 'createdAt', 'updatedAt'];
@@ -49,5 +49,3 @@
 
     App.Validators = { rules, validateField, getErrorMessage, validateRecordStructure };
 })(window.App);
-
-

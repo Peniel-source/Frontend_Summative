@@ -1,4 +1,4 @@
-// THis is the main script file. It does DOM manipulation and some interface works
+// This is the main script file. It does DOM manipulation and some interface works
 
 (function(App) {
     const { settings, sortState, addRecord, editRecord, deleteRecord, updateSetting, getCurrencyDisplay } = App.State;
@@ -6,6 +6,7 @@
     const { compileRegex, highlight, filterRecords } = App.Search;
 
     let currentRegex = null;
+
     function getRecords() {
         return App.State.records;
     }
@@ -25,14 +26,12 @@
 
         document.querySelectorAll('.nav-button').forEach(btn => {
             const isSelected = btn.getAttribute('data-target') === id;
-            btn.classList.toggle('bg-blue-700', isSelected);
-            btn.classList.toggle('bg-blue-500', !isSelected);
+            btn.classList.toggle('active', isSelected);
         });
     }
 
-    
     function renderRecords() {
-        const records = getRecords(); // Get fresh records
+        const records = getRecords();
         const sortedRecords = [...records].sort((a, b) => {
             const { key, dir } = sortState;
             let comparison = 0;
@@ -54,7 +53,7 @@
         container.innerHTML = '';
 
         if (finalRecords.length === 0) {
-            container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">No records found matching current filter/search criteria.</p>`;
+            container.innerHTML = `<p style="text-align: center; color: #666; padding: 2rem;">No records found matching current filter/search criteria.</p>`;
             return;
         }
 
@@ -76,9 +75,9 @@
         });
     }
 
-    //Dashboard settings
+    // Dashboard settings
     function renderDashboard() {
-        const records = getRecords(); // Get fresh records
+        const records = getRecords();
         const totalRecords = records.length;
         const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
 
@@ -116,7 +115,7 @@
         renderTrendChart(records);
     }
 
-    // expense chart
+    // Expense chart
     function renderTrendChart(records) {
         const chart = document.getElementById('trendChart');
         chart.innerHTML = '';
@@ -138,20 +137,20 @@
             }
         });
 
-        const maxAmount = Math.max(...dailyTotals, 1);
+        const maxAmount = Math.max(...dailyTotals, 10);
 
         dailyTotals.forEach((amount, index) => {
             const bar = document.createElement('div');
-            const heightPercentage = (amount / maxAmount) * 100;
+            const heightPercentage = amount > 0 ? Math.max((amount / maxAmount) * 100, 5) : 0;
 
             bar.className = 'chart-bar';
             bar.style.height = `${heightPercentage}%`;
-            bar.title = `${amount.toFixed(2)} USD`;
+            bar.title = `Day ${index + 1}: ${amount.toFixed(2)} USD`;
+            bar.setAttribute('aria-label', `Day ${index + 1}: ${amount.toFixed(2)} USD`);
             chart.appendChild(bar);
         });
     }
 
-    
     function handleFormSubmit(event) {
         event.preventDefault();
         const form = event.target;
@@ -175,6 +174,7 @@
             }
         }
 
+        // Advanced regex check for duplicate words
         const advancedCheck = rules.advanced.test(data.description);
         const descErrorSpan = document.getElementById('descriptionError');
         if (advancedCheck) {
@@ -199,20 +199,22 @@
         showSection('records');
     }
 
-    
     function setupListeners() {
+        // Navigation
         document.querySelectorAll('[data-target]').forEach(button => {
             button.addEventListener('click', () => showSection(button.getAttribute('data-target')));
         });
 
         showSection('dashboard');
 
+        // Form Submit
         document.getElementById('recordForm').addEventListener('submit', handleFormSubmit);
 
+        // Edit/Delete Buttons
         document.getElementById('recordsContainer').addEventListener('click', (e) => {
             const target = e.target;
             const id = target.getAttribute('data-id');
-            const records = getRecords(); // Get fresh records
+            const records = getRecords();
 
             if (target.classList.contains('edit-btn')) {
                 const record = records.find(r => r.id === id);
@@ -230,6 +232,7 @@
             }
         });
 
+        // Delete Modal Handlers
         document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
             document.getElementById('deleteModal').style.display = 'none';
         });
@@ -242,6 +245,7 @@
             document.getElementById('deleteModal').style.display = 'none';
         });
 
+        // Sorting
         document.querySelectorAll('.sort-button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const key = button.id.replace('sort', '').toLowerCase();
@@ -261,21 +265,36 @@
             });
         });
 
+        // Search
         const searchInput = document.getElementById('searchInput');
         const caseToggle = document.getElementById('caseToggle');
         const regexStatus = document.getElementById('regexStatus');
 
         const handleSearch = () => {
-            const pattern = searchInput.value;
+            const pattern = searchInput.value.trim();
             const flags = caseToggle.checked ? 'i' : '';
-            const regex = compileRegex(pattern, flags);
 
+            // If pattern is empty, show all records
+            if (!pattern) {
+                currentRegex = null;
+                regexStatus.textContent = '';
+                renderRecords();
+                return;
+            }
+
+            const regex = compileRegex(pattern, flags);
             currentRegex = regex;
 
-            if (!regex && pattern) {
+            if (!regex) {
                 regexStatus.textContent = '⚠️ Invalid regex pattern. Please check syntax.';
+                regexStatus.style.color = '#dc2626';
             } else {
-                regexStatus.textContent = '';
+                const records = getRecords();
+                const matchCount = records.filter(r =>
+                    regex.test(r.description) || regex.test(r.category)
+                ).length;
+                regexStatus.textContent = `✓ Valid pattern - ${matchCount} match(es) found`;
+                regexStatus.style.color = '#059669';
             }
 
             renderRecords();
@@ -284,6 +303,7 @@
         searchInput.addEventListener('input', handleSearch);
         caseToggle.addEventListener('change', handleSearch);
 
+        // Settings
         document.getElementById('currencySelect').value = settings.displayCurrency;
         document.getElementById('budget').value = settings.budget;
 
@@ -298,11 +318,12 @@
             renderDashboard();
         });
 
+        // Import
         document.getElementById('importBtn').addEventListener('click', () => {
             const fileInput = document.getElementById('importFile');
             const status = document.getElementById('importStatus');
             const file = fileInput.files[0];
-            const records = getRecords(); // Get fresh records
+            const records = getRecords();
 
             status.textContent = '';
 
@@ -347,8 +368,9 @@
             reader.readAsText(file);
         });
 
+        // Export
         document.getElementById('exportBtn').addEventListener('click', () => {
-            const records = getRecords(); 
+            const records = getRecords();
             const dataStr = JSON.stringify(records, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -360,10 +382,9 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
-
-
     }
 
+    // Dark Mode Toggle
     function setupDarkMode() {
         const toggleBtn = document.getElementById('darkModeToggle');
         if (!toggleBtn) return;
@@ -377,8 +398,19 @@
 
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('app:theme', newTheme);
-            
+
+            // Update toggle icon
+            const icon = toggleBtn.querySelector('.toggle-icon');
+            if (icon) {
+                icon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            }
         });
+
+        // Set initial icon
+        const icon = toggleBtn.querySelector('.toggle-icon');
+        if (icon) {
+            icon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
     }
 
     App.UI = { renderDashboard, renderRecords, setupListeners };
@@ -391,4 +423,3 @@
     });
 
 })(window.App);
-
